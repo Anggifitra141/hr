@@ -1,3 +1,8 @@
+<style>
+  .modal-title{
+    margin-top: -10px;
+  }
+</style>
 <section class="section">
   <div class="section-header">
     <h1>Departement</h1>
@@ -17,8 +22,8 @@
         </div>
         <div class="card">
           <div class="card-body">
-            <div class="table-responsive">
-              <table class="table table-striped" id="table">
+            <div class="">
+              <table class="table table-striped" id="table" style="width: 100%;">
                 <thead>
                   <tr>
                     <th class="text-center" width="1px">
@@ -43,7 +48,7 @@
 <div class="modal fade" tabindex="-1" role="dialog" id="modal_departement">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
-      <div class="modal-header">
+      <div class="modal-header bg-primary text-white">
         <h5 class="modal-title">Add departement</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -56,10 +61,12 @@
             <div class="form-group">
               <label>Departement Name</label>
               <input type="text" class="form-control" name="departement_name">
+              <span class="invalid-feedback"></span>
             </div>
             <div class="form-group">
               <label>Head Of Departement</label>
               <input type="text" class="form-control" name="head_of_departement">
+              <span class="invalid-feedback"></span>
             </div>
           </div>
         </form>
@@ -74,11 +81,16 @@
 </div>
 <script src="<?php echo base_url(); ?>assets/modules/jquery.min.js"></script>
 <script>
+  $("input").change(function(){
+      $(this).removeClass('is-invalid');
+      $(this).next().empty();
+  });
   $(document).ready(function() {
 
     var table = $('#table').DataTable({
         "deferRender": true,
         "scrollCollapse": true,
+        "scrollX": true,
         "processing": true,
         "serverSide": true,
         "order": [],
@@ -97,6 +109,7 @@
   function add_departement() {
     save_method = 'add';
     $('#form_departement')[0].reset();
+    $('.form-control').removeClass('is-invalid'); // clear error class
     $('#modal_departement').modal('show'); // show bootstrap modal
     //$('.modal-title').text('Add Person'); // Set Title to Bootstrap modal title
   }
@@ -137,15 +150,24 @@
       data: $('#form_departement').serialize(),
       dataType: "JSON",
       success: function(data, response) {
-        //if success close modal and reload ajax table
-        $('#modal_departement').modal('hide');
-        iziToast.success({
-          title: 'Success !',
-          message: 'Data saved successfully ',
-          position: 'topRight'
-        });
-        $('#table').DataTable().ajax.reload();
-        // location.reload();// for reload a page
+        if(data.status) //if success close modal and reload ajax table
+        {
+          //if success close modal and reload ajax table
+          $('#modal_departement').modal('hide');
+          iziToast.success({
+            title: 'Success !',
+            message: 'Data saved successfully ',
+            position: 'topRight'
+          });
+          $('#table').DataTable().ajax.reload();
+          // location.reload();// for reload a page
+        }else{
+            for (var i = 0; i < data.inputerror.length; i++) 
+            {
+                $('[name="'+data.inputerror[i]+'"]').addClass('is-invalid'); //select parent twice to select div form-group class and add has-error class
+                $('[name="'+data.inputerror[i]+'"]').next().text(data.error_string[i]); //select span help-block class set text error string
+            }
+        }
       },
       error: function(jqXHR, textStatus, errorThrown) {
         iziToast.danger({

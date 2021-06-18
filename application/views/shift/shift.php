@@ -3,19 +3,20 @@
     margin-top: -10px;
   }
 </style>
+
 <section class="section">
   <div class="section-header">
-    <h1>Leave</h1>
+    <h1>Shift</h1>
   </div>
 
   <div class="section-body">
-    <h2 class="section-title">Manage Leave</h2>
+    <h2 class="section-title">Manage Shift</h2>
 
     <div class="row">
       <div class="col-12">
         <div class="form-group">
           <?php if($this->session->userdata('level') != 'guest'){ ?>
-          <a href="#" onclick="add_leave()" class="btn btn-icon icon-left btn-primary"><i class="far fa-plus-square"></i> Add</a>
+          <a href="#" onclick="add_shift()" class="btn btn-icon icon-left btn-primary"><i class="far fa-plus-square"></i> Add</a>
           <?php }?>
           <a href="#" class="btn btn-icon icon-left btn-warning"><i class="fa fa-filter"></i> Filter</a>
           <a href="#" class="btn btn-icon icon-left btn-success"><i class="fas fa-download"></i> Download </a>
@@ -29,10 +30,11 @@
                     <th class="text-center" width="1px">
                       No
                     </th>
-                    <th width="70px">Action</th>
-                    <th>leave Type</th>
-                    <th>Description</th>
-                    <th>Number Of Days</th>
+                    <th>Action</th>
+                    <th>shift Name</th>
+                    <th>Hour Production</th>
+                    <th>Start</th>
+                    <th>End</th>
                   </tr>
                 </thead>
 
@@ -46,52 +48,112 @@
 </section>
 
 <!-- Modal -->
-<div class="modal fade" tabindex="-1" role="dialog" id="modal_leave">
+<div class="modal fade" tabindex="-1" role="dialog" id="modal_shift">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
-      <div class="modal-header bg-primary text-white">
-        <h5 class="modal-title">Add leave</h5>
+      <div class="modal-header  bg-primary text-white">
+        <h5 class="modal-title">Add Shift</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <form class="form-horizontal" method="POST" id="form_leave">
+        <form class="form-horizontal" method="POST" id="form_shift">
           <div class="form-body">
-            <input type="hidden" class="form-control" name="leave_id">
+            <input type="hidden" class="form-control" name="shift_id">
             <div class="form-group">
-              <label>leave Type</label>
-              <input type="text" class="form-control" name="leave_type">
+              <label>Shift Name</label>
+              <input type="text" class="form-control" name="shift_name">
               <span class="invalid-feedback"></span>
             </div>
-            <div class="form-group">
-              <label>Number Of Days</label>
-              <input type="number" class="form-control" name="number_of_days">
-              <span class="invalid-feedback"></span>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Start</label>
+                    <input type="time" class="form-control" name="start">
+                    <span class="invalid-feedback"></span>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>End</label>
+                    <input type="time" class="form-control" name="end">
+                    <span class="invalid-feedback"></span>
+                </div>
+              </div>
             </div>
+            
             <div class="form-group">
-              <label>Description</label>
-              <textarea class="form-control" name="description">
-              </textarea>
+              <label>Hour Production</label>
+              <input type="text" class="form-control" name="hour_production" readonly>
             </div>
+            
           </div>
         </form>
       </div>
       <div class="modal-footer bg-whitesmoke br">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" onclick="save();" class="btn btn-primary">Save</button>
+        <button type="button" class="btn btn-secondary float-left" data-dismiss="modal">Close</button>
+        <button type="button" onclick="save();" class="btn btn-primary float-right">Save</button>
       </div>
     </div>
   </div>
 </div>
-</div>
+
 <script src="<?php echo base_url(); ?>assets/modules/jquery.min.js"></script>
+
+<link rel="stylesheet" href="<?php echo base_url(); ?>assets/modules/bootstrap-timepicker/css/bootstrap-timepicker.min.css">
+<script src="<?php echo base_url(); ?>assets/modules/bootstrap-timepicker/js/bootstrap-timepicker.min.js"></script>
 <script>
-  $("input").change(function(){
-      $(this).removeClass('is-invalid');
-      $(this).next().empty();
+  
+
+   // Timepicker
+   if(jQuery().timepicker && $(".timepicker").length) {
+    $(".timepicker").timepicker({
+      icons: {
+        up: 'fas fa-chevron-up',
+        down: 'fas fa-chevron-down'
+      }
+    });
+  }
+
+  function calculate() {
+     var time1 = $('[name="start"]').val().split(':'), time2 = $('[name="end"]').val().split(':');
+     var hours1 = parseInt(time1[0], 10), 
+         hours2 = parseInt(time2[0], 10),
+         mins1 = parseInt(time1[1], 10),
+         mins2 = parseInt(time2[1], 10);
+     var hours = hours2 - hours1, mins = 0;
+
+     // get hours
+     if(hours < 0) hours = 24 + hours;
+
+     // get minutes
+     if(mins2 >= mins1) {
+         mins = mins2 - mins1;
+     }
+     else {
+         mins = (mins2 + 60) - mins1;
+         hours--;
+     }
+
+     // convert to fraction of 60
+     mins = mins / 60; 
+
+     hours += mins;
+     hours = hours.toFixed(2);
+     $('[name="hour_production"]').val(hours);
+ }
+  $('[name="start"]').change(function() {
+    if($('[name="start"]').val() && $('[name="end"]').val()){
+      calculate();
+    }
   });
-  $("textarea").change(function(){
+  $('[name="end"]').change(function() {
+    if($('[name="start"]').val() && $('[name="end"]').val()){
+      calculate();
+    }
+  });
+  $("input").change(function(){
       $(this).removeClass('is-invalid');
       $(this).next().empty();
   });
@@ -105,7 +167,7 @@
         "serverSide": true,
         "order": [],
         "ajax": {
-          url: "<?php echo site_url('leave/ajax_list')?>", // json datasource
+          url: "<?php echo site_url('shift/ajax_list')?>", // json datasource
           type: "POST"
         },
         "columnDefs": [{
@@ -116,30 +178,31 @@
   });
 
   /* -- Action -- */
-  function add_leave() {
+  function add_shift() {
     save_method = 'add';
-    $('#form_leave')[0].reset();
     $('.form-control').removeClass('is-invalid'); // clear error class
-    $('#modal_leave').modal('show'); // show bootstrap modal
-    //$('.modal-title').text('Add Person'); // Set Title to Bootstrap modal title
+    $('#form_shift')[0].reset();
+    $('#modal_shift').modal('show'); // show bootstrap modal
+    $('.modal-title').text('Add Shift'); // Set Title to Bootstrap modal title
   }
 
-  function get_leave(leave_id) {
+  function get_shift(shift_id) {
     save_method = 'update';
-    $('#form_leave')[0].reset();
+    $('#form_shift')[0].reset();
     $.ajax({
-      url: "<?php echo site_url('leave/get_leave')?>/" + leave_id,
+      url: "<?php echo site_url('shift/get_shift')?>/" + shift_id,
       type: "GET",
       dataType: "JSON",
       success: function(data) {
 
-        $('[name="leave_id"]').val(data.leave_id);
-        $('[name="leave_type"]').val(data.leave_type);
-        $('[name="description"]').val(data.description);
-        $('[name="number_of_days"]').val(data.number_of_days);
+        $('[name="shift_id"]').val(data.shift_id);
+        $('[name="shift_name"]').val(data.shift_name);
+        $('[name="hour_production"]').val(data.hour_production);
+        $('[name="start"]').val(data.start);
+        $('[name="end"]').val(data.end);
 
-        $('#modal_leave').modal('show');
-        $('.modal-title').text('Update leave');
+        $('#modal_shift').modal('show');
+        $('.modal-title').text('Update Shift');
       },
       error: function(jqXHR, textStatus, errorThrown) {
         alert('Error get data from ajax');
@@ -150,21 +213,23 @@
   function save() {
     var url;
     if (save_method == 'add') {
-      url = "<?php echo site_url('leave/add_leave')?>";
+      url = "<?php echo site_url('shift/add_shift')?>";
     } else {
-      url = "<?php echo site_url('leave/update_leave')?>";
+      url = "<?php echo site_url('shift/update_shift')?>";
     }
     // ajax adding data to database
     $.ajax({
       url: url,
       type: "POST",
-      data: $('#form_leave').serialize(),
+      data: $('#form_shift').serialize(),
       dataType: "JSON",
       success: function(data, response) {
         if(data.status) //if success close modal and reload ajax table
         {
+          $('#btnSave').text('save'); //change button text
+          $('#btnSave').attr('disabled',false); //set button enable 
           //if success close modal and reload ajax table
-          $('#modal_leave').modal('hide');
+          $('#modal_shift').modal('hide');
           iziToast.success({
             title: 'Success !',
             message: 'Data saved successfully ',
@@ -172,7 +237,9 @@
           });
           $('#table').DataTable().ajax.reload();
           // location.reload();// for reload a page
-        }else{
+        }
+        else
+        {
             for (var i = 0; i < data.inputerror.length; i++) 
             {
                 $('[name="'+data.inputerror[i]+'"]').addClass('is-invalid'); //select parent twice to select div form-group class and add has-error class
@@ -190,7 +257,7 @@
     });
   }
 
-  function delete_leave(leave_id) {
+  function delete_shift(shift_id) {
 
     swal({
         title: "Are you sure ?",
@@ -202,7 +269,7 @@
       .then((willDelete) => {
         if (willDelete) {
           $.ajax({
-            url: "<?php echo site_url('leave/delete_leave')?>/" + leave_id,
+            url: "<?php echo site_url('shift/delete_shift')?>/" + shift_id,
             type: "post",
             complete: function() {
               swal("Your data has been deleted!", {

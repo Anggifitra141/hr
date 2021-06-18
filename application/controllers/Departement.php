@@ -65,6 +65,8 @@ class Departement extends CI_Controller {
 
   public function add_departement()
   {
+    $this->_validate();
+    
     $data = array(
       'departement_name' => $this->input->post('departement_name'),
       'head_of_departement' => $this->input->post('head_of_departement')
@@ -75,6 +77,7 @@ class Departement extends CI_Controller {
 
   public function update_departement()
   {
+    $this->_validate();
 		$data = array(
 			'departement_name' => $this->input->post('departement_name'),
       'head_of_departement' => $this->input->post('head_of_departement')
@@ -87,6 +90,32 @@ class Departement extends CI_Controller {
   {
     $this->M_departement->delete_departement($departement_id);
     echo json_encode(array("status" => TRUE));
+  }
+  private function _validate()
+  {
+    $data = array();
+    $data['error_string'] = array();
+    $data['inputerror'] = array();
+    $data['status'] = TRUE;
+
+    if($this->input->post('departement_name') == '')
+    {
+      $data['inputerror'][] = 'departement_name';
+      $data['error_string'][] = 'Departemen Name type is required';
+      $data['status'] = FALSE;
+    }
+
+    if($this->input->post('head_of_departement') == '')
+    {
+      $data['inputerror'][] = 'head_of_departement';
+      $data['error_string'][] = 'Head Of Departemen is required';
+      $data['status'] = FALSE;
+    }
+    if($data['status'] === FALSE)
+    {
+      echo json_encode($data);
+      exit();
+    }
   }
 
 }

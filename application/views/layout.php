@@ -282,10 +282,10 @@
               <a href="<?php echo site_url('leave'); ?>" class="nav-link"><i class="fas fa-clipboard"></i><span>Leave</span></a>
             </li>
             <li>
-              <a href="<?php echo site_url('production'); ?>" class="nav-link"><i class="fas fa-arrows-alt"></i><span>Shift</span></a>
+              <a href="<?php echo site_url('shift'); ?>" class="nav-link"><i class="fas fa-arrows-alt"></i><span>Shift</span></a>
             </li>
             <li>
-              <a href="<?php echo site_url('production'); ?>" class="nav-link"><i class="fas fa-clock"></i><span>Overtime</span></a>
+              <a href="<?php echo site_url('overtime'); ?>" class="nav-link"><i class="fas fa-clock"></i><span>Overtime</span></a>
             </li>
             </li>
             <li class="menu-header">Main Setup</li>

@@ -66,6 +66,7 @@ class Leave extends CI_Controller {
 
   public function add_leave()
   {
+    $this->_validate();
     $data = array(
       'leave_type' => $this->input->post('leave_type'),
       'description' => $this->input->post('description'),
@@ -77,6 +78,7 @@ class Leave extends CI_Controller {
 
   public function update_leave()
   {
+    $this->_validate();
 		$data = array(
 			'leave_type' => $this->input->post('leave_type'),
       'description' => $this->input->post('description'),
@@ -90,6 +92,32 @@ class Leave extends CI_Controller {
   {
     $this->M_leave->delete_leave($leave_id);
     echo json_encode(array("status" => TRUE));
+  }
+  private function _validate()
+  {
+    $data = array();
+    $data['error_string'] = array();
+    $data['inputerror'] = array();
+    $data['status'] = TRUE;
+
+    if($this->input->post('leave_type') == '')
+    {
+      $data['inputerror'][] = 'leave_type';
+      $data['error_string'][] = 'Leave type is required';
+      $data['status'] = FALSE;
+    }
+
+    if($this->input->post('number_of_days') == '')
+    {
+      $data['inputerror'][] = 'number_of_days';
+      $data['error_string'][] = 'Number Of Days is required';
+      $data['status'] = FALSE;
+    }
+    if($data['status'] === FALSE)
+    {
+      echo json_encode($data);
+      exit();
+    }
   }
 
 }
