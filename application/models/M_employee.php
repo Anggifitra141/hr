@@ -1,6 +1,6 @@
 <?php
 
-class M_departement extends CI_model {
+class M_employee extends CI_model {
 
   /**
    *  =======   Application By    : PT. Seiber Mitra Solusi    ========
@@ -15,18 +15,19 @@ class M_departement extends CI_model {
 		parent::__construct();
 	}
 
-	var $table = 'departement';
-  var $column_order = array('no','departement_id','head_of_departement');
-  var $column_search = array('departement_id','head_of_departement');
-  var $order = array('departement_id' => 'desc');
+	var $table = 'employee';
+  var $column_order = array('no','employee_id','nik','name','gender', 'position', 'city', 'province');
+  var $column_search = array('employee_id','nik','name','gender', 'position', 'city', 'province');
+  var $order = array('employee_id' => 'desc');
 
   public function get($where="")
   {
-    
-    return $this->db->get('departement');
+    if($where){
+      $this->db->where($where);
+    }
+    return $this->db->get($this->table);
 
   }
-
   private function _get_datatables_query()
   {
 	$this->db->from($this->table);
@@ -86,29 +87,29 @@ class M_departement extends CI_model {
     return $this->db->count_all_results();
   }
 
-  public function get_departement($departement_id)
+  public function get_employee($employee_id)
   {
     $this->db->from($this->table);
-    $this->db->where('departement_id', $departement_id);
+    $this->db->where('employee_id', $employee_id);
     $query = $this->db->get();
     return $query->row();
   }
 
-  public function add_departement($data)
+  public function add_employee($data)
   {
     $this->db->insert($this->table, $data);
     return $this->db->insert_id();
   }
 
-  public function update_departement($where, $data)
+  public function update_employee($where, $data)
   {
     $this->db->update($this->table, $data, $where);
     return $this->db->affected_rows();
   }
 
-  public function delete_departement($departement_id)
+  public function delete_employee($employee_id)
   {
-    $this->db->where('departement_id', $departement_id);
+    $this->db->where('employee_id', $employee_id);
     $this->db->delete($this->table);
   }
 

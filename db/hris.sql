@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 18 Jun 2021 pada 09.55
+-- Waktu pembuatan: 21 Jun 2021 pada 05.18
 -- Versi server: 10.4.16-MariaDB
 -- Versi PHP: 7.4.12
 
@@ -56,7 +56,17 @@ CREATE TABLE `departement` (
 --
 
 INSERT INTO `departement` (`departement_id`, `departement_name`, `head_of_departement`) VALUES
-(1, 'IT', 'Jajang');
+(1, 'HRD', 'Human Resources Department'),
+(9, 'FAT', 'Finance Accounting & Tax'),
+(10, 'GA', 'General Affair'),
+(11, 'ENG', 'Engineering'),
+(12, 'PRO', 'Production'),
+(13, 'SVY', 'Surveyor'),
+(14, 'LOG', 'Logistik'),
+(15, 'PLA', 'Plant and Maintenance'),
+(16, 'SEC', 'Security'),
+(17, 'HSE', 'Health Safety & Environment'),
+(18, 'CS', 'Customer Service');
 
 -- --------------------------------------------------------
 
@@ -84,28 +94,37 @@ CREATE TABLE `employee` (
   `nik` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
   `gender` varchar(10) NOT NULL,
-  `departemen` varchar(100) NOT NULL,
-  `position` varchar(50) NOT NULL,
-  `join_date` date NOT NULL,
-  `addres line` text NOT NULL,
-  `city` varchar(50) NOT NULL,
-  `province` varchar(50) NOT NULL,
-  `zip` int(11) NOT NULL,
-  `religion` varchar(100) NOT NULL,
-  `wn` varchar(50) NOT NULL,
-  `marital_status` varchar(50) NOT NULL,
-  `pph_status` varchar(50) NOT NULL,
-  `blood_group` varchar(50) NOT NULL,
-  `email` varchar(50) NOT NULL,
+  `departemen` varchar(100) DEFAULT NULL,
+  `position` varchar(50) DEFAULT NULL,
+  `date_of_birth` date NOT NULL,
+  `place_of_birth` varchar(50) NOT NULL,
+  `join_date` date DEFAULT NULL,
+  `addres_line` text DEFAULT NULL,
+  `city` varchar(50) DEFAULT NULL,
+  `province` varchar(50) DEFAULT NULL,
+  `zip` int(11) DEFAULT NULL,
+  `religion` varchar(100) DEFAULT NULL,
+  `wn` varchar(50) DEFAULT NULL,
+  `marital_status` varchar(50) DEFAULT NULL,
+  `pph_status` varchar(50) DEFAULT NULL,
+  `blood_group` varchar(50) DEFAULT NULL,
+  `email` varchar(50) DEFAULT NULL,
   `phone` varchar(50) NOT NULL,
-  `npwp` varchar(50) NOT NULL,
-  `bpjs_healt_number` varchar(50) NOT NULL,
-  `bpjs_employment_number` varchar(50) NOT NULL,
-  `bpjs_pension_number` varchar(50) NOT NULL,
-  `bank_account_name` varchar(50) NOT NULL,
-  `bank_account_number` int(11) NOT NULL,
-  `remaining_days_off` int(11) NOT NULL
+  `npwp` varchar(50) DEFAULT NULL,
+  `bpjs_healt_number` varchar(50) DEFAULT NULL,
+  `bpjs_employment_number` varchar(50) DEFAULT NULL,
+  `bpjs_pension_number` varchar(50) DEFAULT NULL,
+  `bank_account_name` varchar(50) DEFAULT NULL,
+  `bank_account_number` int(11) DEFAULT NULL,
+  `remaining_days_off` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data untuk tabel `employee`
+--
+
+INSERT INTO `employee` (`employee_id`, `nik`, `name`, `gender`, `departemen`, `position`, `date_of_birth`, `place_of_birth`, `join_date`, `addres_line`, `city`, `province`, `zip`, `religion`, `wn`, `marital_status`, `pph_status`, `blood_group`, `email`, `phone`, `npwp`, `bpjs_healt_number`, `bpjs_employment_number`, `bpjs_pension_number`, `bank_account_name`, `bank_account_number`, `remaining_days_off`) VALUES
+(3, 123, '123123', 'M', 'Engineering', 'IT DEVELOPER', '2001-10-22', 'Tasikmalaya', '2021-06-22', 'Kp Jantake', 'tasikmalaya', 'Jawa Barat', 46153, 'Islam', 'Indonesia', 'TK', 'TK', 'A', 'hidayatsarip2210@gmail.com', '087771565213', '0', '0', '0', '0', 'BCA', 123123, 10);
 
 -- --------------------------------------------------------
 
@@ -206,6 +225,13 @@ CREATE TABLE `overtime` (
   `description` text NOT NULL,
   `overtime_hours` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data untuk tabel `overtime`
+--
+
+INSERT INTO `overtime` (`overtime_id`, `overtime_type`, `description`, `overtime_hours`) VALUES
+(2, '123', '123', '123');
 
 -- --------------------------------------------------------
 
@@ -386,7 +412,7 @@ ALTER TABLE `attendance`
 -- AUTO_INCREMENT untuk tabel `departement`
 --
 ALTER TABLE `departement`
-  MODIFY `departement_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `departement_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT untuk tabel `education_information`
@@ -398,7 +424,7 @@ ALTER TABLE `education_information`
 -- AUTO_INCREMENT untuk tabel `employee`
 --
 ALTER TABLE `employee`
-  MODIFY `employee_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `employee_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT untuk tabel `employee_leave`
@@ -434,7 +460,7 @@ ALTER TABLE `leave`
 -- AUTO_INCREMENT untuk tabel `overtime`
 --
 ALTER TABLE `overtime`
-  MODIFY `overtime_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `overtime_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT untuk tabel `resignation`

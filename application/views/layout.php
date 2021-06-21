@@ -265,7 +265,7 @@
             <li class="dropdown">
               <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-users"></i> <span>Employee</span></a>
               <ul class="dropdown-menu">
-                <li><a class="nav-link" href="layout-default.html"><i class="fas fa-users"></i> Data Employees</a></li>
+                <li><a class="nav-link" href="<?php echo site_url('employee'); ?>"><i class="fas fa-users"></i> Data Employees</a></li>
                 <li><a class="nav-link" href="layout-transparent.html"><i class="fas fa-clipboard"></i> Attendance</a></li>
                 <li><a class="nav-link" href="layout-top-navigation.html"><i class="fas fa-clipboard"></i> Leaves</a></li>
                 <li><a class="nav-link" href="layout-top-navigation.html"><i class="fas fa-clock"></i> Overtime</a></li>
